@@ -1,0 +1,117 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Receipt Scanner API",
+    "description": "Add receipt data to Google Spreadsheet",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://script.google.com/macros/s/AKfycbwCJMWjm3uhxSkAphvWPxNVdVj6RjnIjgufEjEeZ_7A8ZqwGGq1PYNWCJcrokHHJW08/exec"
+    }
+  ],
+  "paths": {
+    "/": {
+      "post": {
+        "operationId": "addReceipt",
+        "summary": "Add receipt to spreadsheet",
+        "description": "Adds receipt data to Google Spreadsheet",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "description": "Purchase date in YYYY-MM-DD format"
+                  },
+                  "store": {
+                    "type": "string",
+                    "description": "Store name"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "Category"
+                  },
+                  "total": {
+                    "type": "number",
+                    "description": "Total amount"
+                  },
+                  "tax": {
+                    "type": "number",
+                    "description": "Tax amount"
+                  },
+                  "paymentMethod": {
+                    "type": "string",
+                    "description": "Payment method"
+                  },
+                  "items": {
+                    "type": "array",
+                    "description": "List of purchased items",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "Item name"
+                        },
+                        "price": {
+                          "type": "number",
+                          "description": "Item price"
+                        },
+                        "quantity": {
+                          "type": "number",
+                          "description": "Item quantity"
+                        }
+                      }
+                    }
+                  },
+                  "notes": {
+                    "type": "string",
+                    "description": "Additional notes"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully added receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "rowNumber": {
+                          "type": "number"
+                        },
+                        "timestamp": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
