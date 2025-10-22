@@ -3,7 +3,7 @@
   "info": {
     "title": "Receipt Scanner API",
     "description": "Add receipt data to Google Spreadsheet",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "servers": [
     {
@@ -15,7 +15,6 @@
       "post": {
         "operationId": "addReceipt",
         "summary": "Add receipt to spreadsheet",
-        "description": "Adds receipt data to Google Spreadsheet",
         "requestBody": {
           "required": true,
           "content": {
@@ -25,7 +24,7 @@
                 "properties": {
                   "date": {
                     "type": "string",
-                    "description": "Purchase date in YYYY-MM-DD format"
+                    "description": "Purchase date (YYYY-MM-DD)"
                   },
                   "store": {
                     "type": "string",
@@ -33,7 +32,7 @@
                   },
                   "category": {
                     "type": "string",
-                    "description": "Category"
+                    "description": "Category (食費/日用品/交通費/娯楽/その他)"
                   },
                   "total": {
                     "type": "number",
@@ -49,22 +48,13 @@
                   },
                   "items": {
                     "type": "array",
-                    "description": "List of purchased items",
+                    "description": "Purchased items",
                     "items": {
                       "type": "object",
                       "properties": {
-                        "name": {
-                          "type": "string",
-                          "description": "Item name"
-                        },
-                        "price": {
-                          "type": "number",
-                          "description": "Item price"
-                        },
-                        "quantity": {
-                          "type": "number",
-                          "description": "Item quantity"
-                        }
+                        "name": {"type": "string"},
+                        "price": {"type": "number"},
+                        "quantity": {"type": "number"}
                       }
                     }
                   },
@@ -79,32 +69,16 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully added receipt",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "statusCode": {
-                      "type": "number"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "rowNumber": {
-                          "type": "number"
-                        },
-                        "timestamp": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        }
-                      }
-                    }
+                    "success": {"type": "boolean"},
+                    "rowNumber": {"type": "number"},
+                    "timestamp": {"type": "string"},
+                    "message": {"type": "string"}
                   }
                 }
               }
