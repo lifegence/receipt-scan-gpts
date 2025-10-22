@@ -1,42 +1,39 @@
 {
-  "description": "レシートスキャナーAPIのサンプルデータ集",
+  "description": "Multilingual sample data for Receipt Scanner API testing",
   "samples": [
     {
-      "name": "コンビニレシート",
+      "name": "Convenience Store (English - US)",
+      "locale": "en-US",
       "request": {
         "date": "2025-10-22",
-        "store": "セブンイレブン 東京駅前店",
-        "category": "食費",
-        "total": 1234,
-        "tax": 91,
-        "paymentMethod": "電子マネー",
+        "store": "7-Eleven Times Square NYC",
+        "category": "Food",
+        "total": 12.99,
+        "tax": 1.14,
+        "paymentMethod": "Credit Card",
         "items": [
           {
-            "name": "おにぎり 梅",
-            "price": 120,
+            "name": "Sandwich - Turkey Club",
+            "price": 5.99,
+            "quantity": 1
+          },
+          {
+            "name": "Bottled Water 16.9oz",
+            "price": 1.99,
             "quantity": 2
           },
           {
-            "name": "サラダチキン",
-            "price": 298,
-            "quantity": 1
-          },
-          {
-            "name": "お茶 500ml",
-            "price": 150,
-            "quantity": 1
-          },
-          {
-            "name": "コーヒー",
-            "price": 120,
+            "name": "Chips - BBQ",
+            "price": 2.99,
             "quantity": 1
           }
         ],
-        "notes": "朝食と昼食分"
+        "notes": "Lunch break"
       }
     },
     {
-      "name": "スーパーマーケット",
+      "name": "Supermarket (Japanese)",
+      "locale": "ja-JP",
       "request": {
         "date": "2025-10-21",
         "store": "イオン 新宿店",
@@ -64,134 +61,200 @@
             "name": "豚肉 300g",
             "price": 680,
             "quantity": 1
-          },
-          {
-            "name": "野菜セット",
-            "price": 398,
-            "quantity": 1
           }
         ],
         "notes": "週末の買い出し"
       }
     },
     {
-      "name": "ドラッグストア",
+      "name": "Pharmacy (Spanish)",
+      "locale": "es-ES",
       "request": {
         "date": "2025-10-20",
-        "store": "マツモトキヨシ 渋谷店",
-        "category": "日用品",
-        "total": 2980,
-        "tax": 220,
-        "paymentMethod": "QR決済",
+        "store": "Farmacia Central Barcelona",
+        "category": "Productos Diarios",
+        "total": 45.80,
+        "tax": 9.63,
+        "paymentMethod": "Efectivo",
         "items": [
           {
-            "name": "シャンプー",
-            "price": 980,
+            "name": "Champú Anticaspa",
+            "price": 12.50,
             "quantity": 1
           },
           {
-            "name": "歯ブラシ 3本セット",
-            "price": 398,
-            "quantity": 1
+            "name": "Cepillo de Dientes",
+            "price": 3.99,
+            "quantity": 3
           },
           {
-            "name": "ティッシュペーパー 5箱",
-            "price": 498,
-            "quantity": 1
-          },
-          {
-            "name": "洗剤",
-            "price": 580,
-            "quantity": 1
+            "name": "Pañuelos de Papel",
+            "price": 5.99,
+            "quantity": 2
           }
         ],
-        "notes": "日用品まとめ買い"
+        "notes": "Compras mensuales"
       }
     },
     {
-      "name": "交通費",
+      "name": "Coffee Shop (French)",
+      "locale": "fr-FR",
       "request": {
         "date": "2025-10-22",
-        "store": "JR東日本 券売機",
-        "category": "交通費",
-        "total": 1340,
-        "tax": 0,
-        "paymentMethod": "現金",
+        "store": "Café de Flore Paris",
+        "category": "Divertissement",
+        "total": 18.50,
+        "tax": 3.70,
+        "paymentMethod": "Carte Bancaire",
         "items": [
           {
-            "name": "東京→大阪 片道",
-            "price": 1340,
-            "quantity": 1
-          }
-        ],
-        "notes": "出張"
-      }
-    },
-    {
-      "name": "カフェ",
-      "request": {
-        "date": "2025-10-22",
-        "store": "スターバックス 表参道店",
-        "category": "娯楽",
-        "total": 860,
-        "tax": 63,
-        "paymentMethod": "クレジットカード",
-        "items": [
-          {
-            "name": "ドリップコーヒー Tall",
-            "price": 420,
-            "quantity": 1
+            "name": "Café Crème",
+            "price": 5.50,
+            "quantity": 2
           },
           {
-            "name": "チーズケーキ",
-            "price": 440,
-            "quantity": 1
+            "name": "Croissant",
+            "price": 3.50,
+            "quantity": 2
           }
         ],
-        "notes": "友人と打ち合わせ"
+        "notes": "Petit-déjeuner avec collègue"
       }
     },
     {
-      "name": "書店",
+      "name": "Bookstore (German)",
+      "locale": "de-DE",
       "request": {
         "date": "2025-10-19",
-        "store": "紀伊國屋書店 新宿本店",
-        "category": "その他",
-        "total": 3520,
-        "tax": 0,
-        "paymentMethod": "クレジットカード",
+        "store": "Hugendubel München",
+        "category": "Sonstiges",
+        "total": 42.90,
+        "tax": 2.73,
+        "paymentMethod": "EC-Karte",
         "items": [
           {
-            "name": "技術書: Python入門",
-            "price": 2800,
+            "name": "Fachbuch: Python Programmierung",
+            "price": 34.90,
             "quantity": 1
           },
           {
-            "name": "雑誌: 週刊誌",
-            "price": 720,
+            "name": "Zeitschrift: Der Spiegel",
+            "price": 8.00,
             "quantity": 1
           }
         ],
-        "notes": "勉強用"
+        "notes": "Studienmaterial"
       }
     },
     {
-      "name": "最小限のデータ",
+      "name": "Restaurant (Chinese)",
+      "locale": "zh-CN",
       "request": {
-        "store": "不明な店舗",
-        "total": 500
+        "date": "2025-10-21",
+        "store": "北京烤鸭店 上海分店",
+        "category": "食品",
+        "total": 268.00,
+        "tax": 0,
+        "paymentMethod": "微信支付",
+        "items": [
+          {
+            "name": "北京烤鸭",
+            "price": 158.00,
+            "quantity": 1
+          },
+          {
+            "name": "炒青菜",
+            "price": 38.00,
+            "quantity": 2
+          },
+          {
+            "name": "米饭",
+            "price": 5.00,
+            "quantity": 2
+          },
+          {
+            "name": "啤酒",
+            "price": 12.00,
+            "quantity": 2
+          }
+        ],
+        "notes": "商务晚餐"
       }
     },
     {
-      "name": "商品明細なし",
+      "name": "Gas Station (English - UK)",
+      "locale": "en-GB",
       "request": {
         "date": "2025-10-18",
-        "store": "ファミリーマート",
-        "category": "食費",
-        "total": 680,
-        "tax": 50,
-        "paymentMethod": "現金",
-        "notes": "商品明細読み取れず"
+        "store": "Shell Petrol Station London",
+        "category": "Transportation",
+        "total": 65.40,
+        "tax": 10.90,
+        "paymentMethod": "Debit Card",
+        "items": [
+          {
+            "name": "Unleaded Petrol 40L",
+            "price": 60.00,
+            "quantity": 1
+          },
+          {
+            "name": "Car Wash Token",
+            "price": 5.40,
+            "quantity": 1
+          }
+        ],
+        "notes": "Weekly refuel"
+      }
+    },
+    {
+      "name": "Electronics (Korean)",
+      "locale": "ko-KR",
+      "request": {
+        "date": "2025-10-17",
+        "store": "삼성 디지털프라자 강남점",
+        "category": "기타",
+        "total": 189000,
+        "tax": 17182,
+        "paymentMethod": "신용카드",
+        "items": [
+          {
+            "name": "무선 이어폰",
+            "price": 149000,
+            "quantity": 1
+          },
+          {
+            "name": "스마트폰 케이스",
+            "price": 35000,
+            "quantity": 1
+          },
+          {
+            "name": "화면보호필름",
+            "price": 15000,
+            "quantity": 1
+          }
+        ],
+        "notes": "신제품 구매"
+      }
+    },
+    {
+      "name": "Minimal Data (Universal)",
+      "locale": "en-US",
+      "request": {
+        "store": "Unknown Store",
+        "total": 10.00
+      }
+    },
+    {
+      "name": "No Items (Universal)",
+      "locale": "en-US",
+      "request": {
+        "date": "2025-10-18",
+        "store": "Quick Mart",
+        "category": "Food",
+        "total": 8.50,
+        "tax": 0.68,
+        "paymentMethod": "Cash",
+        "notes": "Items unreadable from receipt"
       }
     }
   ]

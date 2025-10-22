@@ -101,6 +101,19 @@ MIT License
 - **Google Apps Script**: API endpoint
 - **Google Spreadsheet**: Data storage
 
+## Multilingual Support
+
+The system supports receipt processing in multiple languages:
+- **English** (US, UK)
+- **Japanese** (日本語)
+- **Spanish** (Español)
+- **French** (Français)
+- **German** (Deutsch)
+- **Chinese** (中文)
+- **Korean** (한국어)
+
+Sample data for all supported languages is available in `docs/sample_data.json`.
+
 ## Contributing
 
 Issues and Pull Requests are welcome.

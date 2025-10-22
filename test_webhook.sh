@@ -3,37 +3,32 @@
 # Google Apps Script Webhook URL
 WEBHOOK_URL="https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID_HERE/exec"
 
-# Test data (convenience store receipt)
+# Test data (English convenience store receipt)
 TEST_DATA='{
   "date": "2025-10-22",
-  "store": "セブンイレブン 東京駅前店",
-  "category": "食費",
-  "total": 1234,
-  "tax": 91,
-  "paymentMethod": "電子マネー",
+  "store": "7-Eleven Times Square NYC",
+  "category": "Food",
+  "total": 12.99,
+  "tax": 1.14,
+  "paymentMethod": "Credit Card",
   "items": [
     {
-      "name": "おにぎり 梅",
-      "price": 120,
+      "name": "Sandwich - Turkey Club",
+      "price": 5.99,
+      "quantity": 1
+    },
+    {
+      "name": "Bottled Water 16.9oz",
+      "price": 1.99,
       "quantity": 2
     },
     {
-      "name": "サラダチキン",
-      "price": 298,
-      "quantity": 1
-    },
-    {
-      "name": "お茶 500ml",
-      "price": 150,
-      "quantity": 1
-    },
-    {
-      "name": "コーヒー",
-      "price": 120,
+      "name": "Chips - BBQ",
+      "price": 2.99,
       "quantity": 1
     }
   ],
-  "notes": "朝食と昼食分"
+  "notes": "Lunch break"
 }'
 
 echo "================================================"
