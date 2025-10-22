@@ -1,0 +1,198 @@
+{
+  "description": "レシートスキャナーAPIのサンプルデータ集",
+  "samples": [
+    {
+      "name": "コンビニレシート",
+      "request": {
+        "date": "2025-10-22",
+        "store": "セブンイレブン 東京駅前店",
+        "category": "食費",
+        "total": 1234,
+        "tax": 91,
+        "paymentMethod": "電子マネー",
+        "items": [
+          {
+            "name": "おにぎり 梅",
+            "price": 120,
+            "quantity": 2
+          },
+          {
+            "name": "サラダチキン",
+            "price": 298,
+            "quantity": 1
+          },
+          {
+            "name": "お茶 500ml",
+            "price": 150,
+            "quantity": 1
+          },
+          {
+            "name": "コーヒー",
+            "price": 120,
+            "quantity": 1
+          }
+        ],
+        "notes": "朝食と昼食分"
+      }
+    },
+    {
+      "name": "スーパーマーケット",
+      "request": {
+        "date": "2025-10-21",
+        "store": "イオン 新宿店",
+        "category": "食費",
+        "total": 5432,
+        "tax": 402,
+        "paymentMethod": "クレジットカード",
+        "items": [
+          {
+            "name": "牛乳 1L",
+            "price": 198,
+            "quantity": 2
+          },
+          {
+            "name": "食パン",
+            "price": 128,
+            "quantity": 1
+          },
+          {
+            "name": "卵 10個入",
+            "price": 248,
+            "quantity": 1
+          },
+          {
+            "name": "豚肉 300g",
+            "price": 680,
+            "quantity": 1
+          },
+          {
+            "name": "野菜セット",
+            "price": 398,
+            "quantity": 1
+          }
+        ],
+        "notes": "週末の買い出し"
+      }
+    },
+    {
+      "name": "ドラッグストア",
+      "request": {
+        "date": "2025-10-20",
+        "store": "マツモトキヨシ 渋谷店",
+        "category": "日用品",
+        "total": 2980,
+        "tax": 220,
+        "paymentMethod": "QR決済",
+        "items": [
+          {
+            "name": "シャンプー",
+            "price": 980,
+            "quantity": 1
+          },
+          {
+            "name": "歯ブラシ 3本セット",
+            "price": 398,
+            "quantity": 1
+          },
+          {
+            "name": "ティッシュペーパー 5箱",
+            "price": 498,
+            "quantity": 1
+          },
+          {
+            "name": "洗剤",
+            "price": 580,
+            "quantity": 1
+          }
+        ],
+        "notes": "日用品まとめ買い"
+      }
+    },
+    {
+      "name": "交通費",
+      "request": {
+        "date": "2025-10-22",
+        "store": "JR東日本 券売機",
+        "category": "交通費",
+        "total": 1340,
+        "tax": 0,
+        "paymentMethod": "現金",
+        "items": [
+          {
+            "name": "東京→大阪 片道",
+            "price": 1340,
+            "quantity": 1
+          }
+        ],
+        "notes": "出張"
+      }
+    },
+    {
+      "name": "カフェ",
+      "request": {
+        "date": "2025-10-22",
+        "store": "スターバックス 表参道店",
+        "category": "娯楽",
+        "total": 860,
+        "tax": 63,
+        "paymentMethod": "クレジットカード",
+        "items": [
+          {
+            "name": "ドリップコーヒー Tall",
+            "price": 420,
+            "quantity": 1
+          },
+          {
+            "name": "チーズケーキ",
+            "price": 440,
+            "quantity": 1
+          }
+        ],
+        "notes": "友人と打ち合わせ"
+      }
+    },
+    {
+      "name": "書店",
+      "request": {
+        "date": "2025-10-19",
+        "store": "紀伊國屋書店 新宿本店",
+        "category": "その他",
+        "total": 3520,
+        "tax": 0,
+        "paymentMethod": "クレジットカード",
+        "items": [
+          {
+            "name": "技術書: Python入門",
+            "price": 2800,
+            "quantity": 1
+          },
+          {
+            "name": "雑誌: 週刊誌",
+            "price": 720,
+            "quantity": 1
+          }
+        ],
+        "notes": "勉強用"
+      }
+    },
+    {
+      "name": "最小限のデータ",
+      "request": {
+        "store": "不明な店舗",
+        "total": 500
+      }
+    },
+    {
+      "name": "商品明細なし",
+      "request": {
+        "date": "2025-10-18",
+        "store": "ファミリーマート",
+        "category": "食費",
+        "total": 680,
+        "tax": 50,
+        "paymentMethod": "現金",
+        "notes": "商品明細読み取れず"
+      }
+    }
+  ]
+}
