@@ -7,11 +7,11 @@
   },
   "servers": [
     {
-      "url": "https://script.google.com/macros/s/AKfycbwCJMWjm3uhxSkAphvWPxNVdVj6RjnIjgufEjEeZ_7A8ZqwGGq1PYNWCJcrokHHJW08/exec"
+      "url": "https://script.google.com/macros/s/AKfycbz0jm4j35inhtNs-BD0HpVx9yYef7smxZrX6TeuwZJZDICm5xVJr0eQEDv0d5lpyMnH"
     }
   ],
   "paths": {
-    "/": {
+    "/exec": {
       "post": {
         "operationId": "addReceipt",
         "summary": "Add receipt to spreadsheet",
