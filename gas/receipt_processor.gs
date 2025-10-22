@@ -1,5 +1,5 @@
 /**
- * Receipt Scanner API - Add receipt data to Google Spreadsheet (Business Card GPTs Pattern)
+ * Receipt Scanner API - Add receipt data to Google Spreadsheet
  */
 
 const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
