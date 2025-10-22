@@ -3,7 +3,7 @@
  */
 
 const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
-const SHEET_NAME = 'レシート一覧';  // Sheet name (keep Japanese for compatibility)
+const SHEET_NAME = 'Receipts';  // Sheet name for receipt data
 
 function doPost(e) {
   try {
@@ -62,8 +62,8 @@ function createReceiptSheet(spreadsheet) {
   const sheet = spreadsheet.insertSheet(SHEET_NAME);
 
   const headers = [
-    '登録日時', '購入日', '店舗名', 'カテゴリ',
-    '合計金額', '消費税', '支払方法', '商品明細', 'メモ'
+    'Registration Date', 'Purchase Date', 'Store Name', 'Category',
+    'Total Amount', 'Tax', 'Payment Method', 'Item Details', 'Notes'
   ];
 
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
@@ -94,15 +94,15 @@ function createTextResponse(message) {
 function testAddReceipt() {
   const testData = {
     date: '2025-10-22',
-    store: 'Test Store (Business Card Pattern)',
-    category: '食費',  // Category (keep Japanese for compatibility)
+    store: 'Test Store',
+    category: 'Food',
     total: 7777,
     tax: 574,
-    paymentMethod: 'クレジットカード',  // Payment method (keep Japanese for compatibility)
+    paymentMethod: 'Credit Card',
     items: [
       { name: 'Test Item', price: 7777, quantity: 1 }
     ],
-    notes: 'Implemented with Business Card GPTs pattern'
+    notes: 'Test data for receipt scanner'
   };
 
   const result = addReceiptToSheet(testData);

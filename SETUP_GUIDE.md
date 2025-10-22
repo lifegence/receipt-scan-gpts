@@ -57,7 +57,7 @@ const SPREADSHEET_ID = '1a2B3c4D5e6F7g8H9i0JkLmNoPqRsTuVwXyZ';
    - "Review permissions" → Select Google account
    - "Show Advanced" → "Go to Receipt Scanner API (unsafe)"
    - Click "Allow"
-4. A "レシート一覧" (Receipt List) sheet is created in the spreadsheet with test data
+4. A "Receipts" sheet is created in the spreadsheet with test data
 
 #### 2-6. Deploy as Web App
 1. Click "Deploy" in the upper right → "New deployment"
@@ -172,7 +172,7 @@ Add the following:
 
 #### 4-4. Check Spreadsheet
 1. Open Google Spreadsheet
-2. Confirm that a new row has been added to the "レシート一覧" (Receipt List) sheet
+2. Confirm that a new row has been added to the "Receipts" sheet
 
 ---
 
@@ -294,16 +294,16 @@ const row = [
 2. Update headers in `createReceiptSheet` function:
 ```javascript
 const headers = [
-  '登録日時',
-  '購入日',
-  '店舗名',
-  'カテゴリ',
-  '合計金額',
-  '消費税',
-  '支払方法',
-  '店舗所在地',    // ← Added
-  '商品明細',
-  'メモ'
+  'Registration Date',
+  'Purchase Date',
+  'Store Name',
+  'Category',
+  'Total Amount',
+  'Tax',
+  'Payment Method',
+  'Store Location',    // ← Added
+  'Item Details',
+  'Notes'
 ];
 ```
 

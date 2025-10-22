@@ -31,11 +31,11 @@ Receipt Scanner GPTs Operation Verification Procedures
 ### 1-2. Verify Spreadsheet
 
 1. Open Google Spreadsheet
-2. "レシート一覧" (Receipt List) sheet is automatically created
+2. "Receipts" sheet is automatically created
 3. Header row + test data row exist
 
 **Expected Result:**
-| 登録日時 | 購入日 | 店舗名 | カテゴリ | 合計金額 | 消費税 | 支払方法 | 商品明細 | メモ |
+| Registration Date | Purchase Date | Store Name | Category | Total Amount | Tax | Payment Method | Item Details | Notes |
 |---------|--------|--------|---------|---------|--------|---------|---------|------|
 | 2025-10-22 XX:XX | 2025-10-22 | Seven-Eleven | 食費 | ¥1,234 | ¥91 | 現金 | [{"name":"Rice Ball"...}] | Test data |
 
