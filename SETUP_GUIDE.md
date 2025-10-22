@@ -121,7 +121,9 @@ const SPREADSHEET_ID = '1a2B3c4D5e6F7g8H9i0JkLmNoPqRsTuVwXyZ';
 2. 「Create new action」をクリック
 
 **Schema の設定:**
-1. `gpts/actions_schema.json` の内容を全てコピー
+1. **推奨**: `gpts/actions_schema_fixed.json` の内容を全てコピー
+   - GPTs との互換性を改善した最適化版
+   - トラブルが発生した場合は `gpts/actions_schema_simple.json` を試す
 2. Schema入力欄に貼り付け
 3. **重要**: `servers` → `url` の部分を **Phase 2-7で取得したデプロイURL** に置き換え
 
@@ -129,11 +131,14 @@ const SPREADSHEET_ID = '1a2B3c4D5e6F7g8H9i0JkLmNoPqRsTuVwXyZ';
 ```json
 "servers": [
   {
-    "url": "https://script.google.com/macros/s/AKfycbxXXXXXXXXXXXXXXXXXXXXXX/exec",
-    "description": "Google Apps Script Web App"
+    "url": "https://script.google.com/macros/s/AKfycbxXXXXXXXXXXXXXXXXXXXXXX/exec"
   }
 ]
 ```
+
+**重要な注意点:**
+- URL の最後に `/exec` が含まれていることを確認
+- Schema 内の `"paths"` は `"/"` のままにする（`"/exec"` にしない）
 
 **Authentication (認証):**
 - 「None」を選択（Google Apps Scriptは全員アクセス可能で設定済み）
@@ -175,10 +180,45 @@ const SPREADSHEET_ID = '1a2B3c4D5e6F7g8H9i0JkLmNoPqRsTuVwXyZ';
 
 ## トラブルシューティング
 
+### エラー: "Error talking to connector" または "Failed Outbound Call"
+
+**これは GPTs Actions の接続エラーです。以下を順番に確認してください:**
+
+**原因1: Actions Schema の問題**
+- `gpts/actions_schema_fixed.json` を使用しているか確認
+- Schema に `example` フィールドが残っていないか確認
+- `operationId` が `addReceipt` になっているか確認
+
+**原因2: Server URL の設定ミス**
+- URL の最後に `/exec` が含まれているか確認
+  - ✅ 正: `https://script.google.com/macros/s/AKfycbx.../exec`
+  - ❌ 誤: `https://script.google.com/macros/s/AKfycbx...`
+- `"paths"` セクションが `"/"` になっているか確認（`"/exec"` ではない）
+
+**原因3: Authentication 設定**
+- Authentication が「None」になっているか確認
+- API Key などが設定されていないか確認
+
+**原因4: Apps Script のアクセス権限**
+- Apps Script → 「デプロイ」→「デプロイを管理」
+- 「アクセスできるユーザー」が **「全員」** になっているか確認（これが最重要！）
+
+**デバッグ方法:**
+1. ターミナルから直接テスト:
+```bash
+curl -X POST "https://script.google.com/macros/s/【あなたのID】/exec" \
+  -H "Content-Type: application/json" \
+  -d '{"store":"テスト","total":1000}'
+```
+2. エラーが出なければ GAS 側は正常 → GPTs の Actions 設定を見直す
+3. エラーが出る場合 → GAS のデプロイ設定を確認
+
+---
+
 ### エラー: "API呼び出しに失敗しました"
 
 **原因1: デプロイURLが間違っている**
-- `gpts/actions_schema.json` の `servers.url` を確認
+- `gpts/actions_schema_fixed.json` の `servers.url` を確認
 - Apps Scriptの「デプロイを管理」から正しいURLを再確認
 
 **原因2: Apps Scriptの実行権限がない**
@@ -314,14 +354,25 @@ const headers = [
 ```
 receipt_scan_gpts/
 ├── gas/
-│   └── receipt_processor.gs          # Google Apps Scriptコード
+│   ├── receipt_processor.gs           # Google Apps Scriptコード（基本版）
+│   ├── receipt_processor_debug.gs     # デバッグログ付きバージョン
+│   └── receipt_processor_cors.gs      # CORS対応版
 ├── gpts/
-│   ├── instructions.md                # GPTsカスタム指示文
-│   └── actions_schema.json            # GPTs Actionsスキーマ
+│   ├── instructions.md                 # GPTsカスタム指示文
+│   ├── actions_schema.json             # GPTs Actionsスキーマ（元版）
+│   ├── actions_schema_fixed.json       # 推奨：互換性改善版 ★
+│   └── actions_schema_simple.json      # 最小構成テスト版
 ├── docs/
-│   └── sample_receipt_template.xlsx   # サンプルシートテンプレート
-└── SETUP_GUIDE.md                     # このファイル
+│   └── sample_data.json                # サンプルデータ集
+├── test_webhook.sh                     # Webhook接続テストスクリプト
+├── send_receipt.sh                     # サンプルデータ送信スクリプト
+├── SETUP_GUIDE.md                      # このファイル
+└── README.md                           # プロジェクト概要
 ```
+
+**推奨ファイル:**
+- GAS: `receipt_processor.gs`（または問題があれば `receipt_processor_cors.gs`）
+- Schema: `actions_schema_fixed.json` ★
 
 ---
 
@@ -335,6 +386,12 @@ receipt_scan_gpts/
 ---
 
 ## 更新履歴
+
+- **v1.1.0** (2025-10-22): GPTs Actions 互換性改善
+  - `actions_schema_fixed.json` 追加（GPTs との接続問題を解決）
+  - トラブルシューティングセクション拡充
+  - デバッグ用スクリプト追加（`test_webhook.sh`, `send_receipt.sh`）
+  - CORS 対応版 GAS スクリプト追加
 
 - **v1.0.0** (2025-10-22): 初版リリース
   - レシート画像解析機能
