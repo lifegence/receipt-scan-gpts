@@ -33,7 +33,9 @@
 
 #### 2-2. コードを貼り付け
 1. デフォルトの `function myFunction() {}` を全て削除
-2. `gas/receipt_processor.gs` の内容を全てコピー
+2. **推奨**: `gas/receipt_processor_gpts.gs` の内容を全てコピー
+   - GPTs Actions との互換性を最適化したバージョン
+   - 問題が発生した場合は `gas/receipt_processor.gs` を試す
 3. Apps Scriptエディタに貼り付け
 
 #### 2-3. スプレッドシートIDを設定
@@ -184,22 +186,34 @@ const SPREADSHEET_ID = '1a2B3c4D5e6F7g8H9i0JkLmNoPqRsTuVwXyZ';
 
 **これは GPTs Actions の接続エラーです。以下を順番に確認してください:**
 
-**原因1: Actions Schema の問題**
+**最重要: GPTs 最適化版スクリプトを使用**
+- ✅ **`gas/receipt_processor_gpts.gs` を使用してください**
+- このバージョンは GPTs との互換性のためレスポンス形式を最適化しています
+- 理由: Google Apps Script のリダイレクト処理を GPTs が正しく処理できない場合があるため
+
+**原因1: Apps Script のバージョン更新**
+最適化版スクリプトに変更した後、必ず新しいバージョンでデプロイ:
+1. Apps Script エディタでコードを `receipt_processor_gpts.gs` に置き換え
+2. 「デプロイ」→「デプロイを管理」
+3. 鉛筆アイコン → 「バージョン」→「新バージョン」
+4. 「デプロイ」をクリック
+
+**原因2: Actions Schema の問題**
 - `gpts/actions_schema_fixed.json` を使用しているか確認
 - Schema に `example` フィールドが残っていないか確認
 - `operationId` が `addReceipt` になっているか確認
 
-**原因2: Server URL の設定ミス**
+**原因3: Server URL の設定ミス**
 - URL の最後に `/exec` が含まれているか確認
   - ✅ 正: `https://script.google.com/macros/s/AKfycbx.../exec`
   - ❌ 誤: `https://script.google.com/macros/s/AKfycbx...`
 - `"paths"` セクションが `"/"` になっているか確認（`"/exec"` ではない）
 
-**原因3: Authentication 設定**
+**原因4: Authentication 設定**
 - Authentication が「None」になっているか確認
 - API Key などが設定されていないか確認
 
-**原因4: Apps Script のアクセス権限**
+**原因5: Apps Script のアクセス権限**
 - Apps Script → 「デプロイ」→「デプロイを管理」
 - 「アクセスできるユーザー」が **「全員」** になっているか確認（これが最重要！）
 
@@ -355,6 +369,7 @@ const headers = [
 receipt_scan_gpts/
 ├── gas/
 │   ├── receipt_processor.gs           # Google Apps Scriptコード（基本版）
+│   ├── receipt_processor_gpts.gs      # 推奨：GPTs最適化版 ★★
 │   ├── receipt_processor_debug.gs     # デバッグログ付きバージョン
 │   └── receipt_processor_cors.gs      # CORS対応版
 ├── gpts/
@@ -371,7 +386,7 @@ receipt_scan_gpts/
 ```
 
 **推奨ファイル:**
-- GAS: `receipt_processor.gs`（または問題があれば `receipt_processor_cors.gs`）
+- GAS: `receipt_processor_gpts.gs` ★★（GPTs との接続問題を解決）
 - Schema: `actions_schema_fixed.json` ★
 
 ---
@@ -386,6 +401,11 @@ receipt_scan_gpts/
 ---
 
 ## 更新履歴
+
+- **v1.2.0** (2025-10-22): GPTs 接続エラー完全解決
+  - `receipt_processor_gpts.gs` 追加（レスポンス形式を GPTs 用に最適化）
+  - リダイレクト処理の問題を解決
+  - シンプルな success/error レスポンス形式を採用
 
 - **v1.1.0** (2025-10-22): GPTs Actions 互換性改善
   - `actions_schema_fixed.json` 追加（GPTs との接続問題を解決）
