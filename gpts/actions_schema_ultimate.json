@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://script.google.com/macros/s/AKfycbz0jm4j35inhtNs-BD0HpVx9yYef7smxZrX6TeuwZJZDICm5xVJr0eQEDv0d5lpyMnH/exec",
+      "url": "https://script.google.com/macros/s/AKfycbyXaG2hIWPrENw-3dgnu1FgKYIW5O_Tp5Ph3mJkIilYEbpo3nnHUkbWbx1xHhOXCwee/exec",
       "description": "URL of the Google Apps Script Web App"
     }
   ],
