@@ -1,135 +1,131 @@
-# レシートスキャナーGPTs セットアップ手順書
+# Receipt Scanner GPTs Setup Guide
 
-## 概要
-スマホで撮影したレシート画像をGPTsで解析し、Google Spreadsheetに自動でデータ化して記録するシステムです。
+## Overview
+This system analyzes receipt images taken with a smartphone using GPTs and automatically records the data to Google Spreadsheet.
 
-## システム構成
+## System Architecture
 ```
-スマホカメラ → GPTs (画像解析) → Google Apps Script API → Google Spreadsheet
+Smartphone Camera → GPTs (Image Analysis) → Google Apps Script API → Google Spreadsheet
 ```
 
 ---
 
-## セットアップ手順
+## Setup Instructions
 
-### Phase 1: Google Spreadsheet の準備
+### Phase 1: Prepare Google Spreadsheet
 
-#### 1-1. 新しいスプレッドシートを作成
-1. [Google Sheets](https://sheets.google.com/)を開く
-2. 「空白」から新しいスプレッドシートを作成
-3. 名前を「レシート管理」などに変更
+#### 1-1. Create a New Spreadsheet
+1. Open [Google Sheets](https://sheets.google.com/)
+2. Create a new spreadsheet from "Blank"
+3. Rename it to something like "Receipt Manager"
 
-#### 1-2. スプレッドシートIDを取得
-- URLから取得: `https://docs.google.com/spreadsheets/d/【ここがスプレッドシートID】/edit`
-- この **スプレッドシートID** を控えておく（後で使用）
+#### 1-2. Get Spreadsheet ID
+- Get from URL: `https://docs.google.com/spreadsheets/d/【This is the Spreadsheet ID】/edit`
+- Note down this **Spreadsheet ID** (will be used later)
 
 ---
 
-### Phase 2: Google Apps Script のデプロイ
+### Phase 2: Deploy Google Apps Script
 
-#### 2-1. Apps Script エディタを開く
-1. スプレッドシート上部メニュー → 「拡張機能」→「Apps Script」
-2. 新しいタブでApps Scriptエディタが開く
+#### 2-1. Open Apps Script Editor
+1. In the spreadsheet top menu → "Extensions" → "Apps Script"
+2. Apps Script editor opens in a new tab
 
-#### 2-2. コードを貼り付け
-1. デフォルトの `function myFunction() {}` を全て削除
-2. **推奨**: `gas/receipt_processor_gpts.gs` の内容を全てコピー
-   - GPTs Actions との互換性を最適化したバージョン
-   - 問題が発生した場合は `gas/receipt_processor.gs` を試す
-3. Apps Scriptエディタに貼り付け
+#### 2-2. Paste the Code
+1. Delete the default `function myFunction() {}`
+2. Copy all contents of `gas/receipt_processor.gs`
+3. Paste into the Apps Script editor
 
-#### 2-3. スプレッドシートIDを設定
+#### 2-3. Set Spreadsheet ID
 ```javascript
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';  // ← ここを実際のIDに置き換え
+const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';  // ← Replace with actual ID
 ```
 
-**例:**
+**Example:**
 ```javascript
 const SPREADSHEET_ID = '1a2B3c4D5e6F7g8H9i0JkLmNoPqRsTuVwXyZ';
 ```
 
-#### 2-4. プロジェクトを保存
-- 左上のディスクアイコンをクリック、または `Ctrl+S` (Mac: `Cmd+S`)
-- プロジェクト名を「レシートスキャナーAPI」などに変更
+#### 2-4. Save the Project
+- Click the disk icon in the upper left, or press `Ctrl+S` (Mac: `Cmd+S`)
+- Rename the project to something like "Receipt Scanner API"
 
-#### 2-5. テスト実行（任意）
-1. エディタ上部の関数選択で「testAddReceipt」を選択
-2. 「実行」ボタンをクリック
-3. 初回実行時、権限の承認を求められる:
-   - 「権限を確認」→ Googleアカウントを選択
-   - 「詳細を表示」→「レシートスキャナーAPI（安全ではないページ）に移動」
-   - 「許可」をクリック
-4. スプレッドシートに「レシート一覧」シートが作成され、テストデータが追加される
+#### 2-5. Test Run (Optional)
+1. Select "testAddReceipt" from the function dropdown at the top of the editor
+2. Click the "Run" button
+3. On first run, authorization is required:
+   - "Review permissions" → Select Google account
+   - "Show Advanced" → "Go to Receipt Scanner API (unsafe)"
+   - Click "Allow"
+4. A "レシート一覧" (Receipt List) sheet is created in the spreadsheet with test data
 
-#### 2-6. Webアプリとしてデプロイ
-1. 右上の「デプロイ」→「新しいデプロイ」をクリック
-2. 種類の選択で「ウェブアプリ」を選択
-3. 設定:
-   - **説明**: 「レシートスキャナーAPI v1」
-   - **次のユーザーとして実行**: 「自分」
-   - **アクセスできるユーザー**: 「全員」（※重要）
-4. 「デプロイ」をクリック
-5. 再度承認を求められた場合は「アクセスを承認」
+#### 2-6. Deploy as Web App
+1. Click "Deploy" in the upper right → "New deployment"
+2. Select "Web app" for type
+3. Settings:
+   - **Description**: "Receipt Scanner API v1"
+   - **Execute as**: "Me"
+   - **Who has access**: "Anyone" (※Important)
+4. Click "Deploy"
+5. Authorize access again if prompted
 
-#### 2-7. デプロイURLを取得
-1. デプロイ完了画面で **「ウェブアプリのURL」** が表示される
-2. このURLを **コピーして控える**（後で使用）
-   - 形式: `https://script.google.com/macros/s/【デプロイID】/exec`
+#### 2-7. Get Deployment URL
+1. The deployment completion screen shows the **"Web app URL"**
+2. **Copy and save this URL** (will be used later)
+   - Format: `https://script.google.com/macros/s/【Deployment ID】/exec`
 
 ---
 
-### Phase 3: GPTs の作成と設定
+### Phase 3: Create and Configure GPTs
 
-#### 3-1. ChatGPT GPTs作成画面を開く
-1. [ChatGPT](https://chat.openai.com/)にアクセス
-2. 左サイドバーの「Explore GPTs」をクリック
-3. 右上の「Create」または「+ Create a GPT」をクリック
+#### 3-1. Open ChatGPT GPTs Creation Screen
+1. Access [ChatGPT](https://chat.openai.com/)
+2. Click "Explore GPTs" in the left sidebar
+3. Click "Create" or "+ Create a GPT" in the upper right
 
-#### 3-2. 基本情報を設定
-**Configure** タブをクリックして以下を設定:
+#### 3-2. Configure Basic Information
+Click the **Configure** tab and set the following:
 
-**Name (名前):**
+**Name:**
 ```
-レシートスキャナー
-```
-
-**Description (説明):**
-```
-スマホで撮影したレシート画像を解析し、Google Spreadsheetに自動でデータを記録します
+Receipt Scanner
 ```
 
-**Instructions (指示):**
-- `gpts/instructions.md` の内容を全てコピーして貼り付け
-
-**Conversation starters (会話のきっかけ):**
-以下を追加:
+**Description:**
 ```
-📸 レシート画像をアップロードしてください
-💰 最近の支出を確認
-📊 カテゴリ別集計
-❓ 使い方を教えて
+Analyzes receipt images taken with a smartphone and automatically records data to Google Spreadsheet
 ```
 
-**Knowledge (ナレッジ):**
-- なし（必要に応じて後で追加）
+**Instructions:**
+- Copy all contents of `gpts/instructions.md` and paste
 
-**Capabilities (機能):**
+**Conversation starters:**
+Add the following:
+```
+📸 Please upload a receipt image
+💰 Check recent expenses
+📊 Category breakdown
+❓ How to use
+```
+
+**Knowledge:**
+- None (can be added later if needed)
+
+**Capabilities:**
 - ✅ Web Browsing: OFF
 - ✅ DALL·E Image Generation: OFF
 - ✅ Code Interpreter: OFF
 
-#### 3-3. Actions を設定
-1. 「Actions」セクションまでスクロール
-2. 「Create new action」をクリック
+#### 3-3. Configure Actions
+1. Scroll to "Actions" section
+2. Click "Create new action"
 
-**Schema の設定:**
-1. **推奨**: `gpts/actions_schema_fixed.json` の内容を全てコピー
-   - GPTs との互換性を改善した最適化版
-   - トラブルが発生した場合は `gpts/actions_schema_simple.json` を試す
-2. Schema入力欄に貼り付け
-3. **重要**: `servers` → `url` の部分を **Phase 2-7で取得したデプロイURL** に置き換え
+**Schema Configuration:**
+1. Copy all contents of `gpts/actions_schema.json`
+2. Paste into the Schema input field
+3. **Important**: Replace the `servers` → `url` section with the **Deployment URL obtained in Phase 2-7**
 
-**例:**
+**Example:**
 ```json
 "servers": [
   {
@@ -138,155 +134,148 @@ const SPREADSHEET_ID = '1a2B3c4D5e6F7g8H9i0JkLmNoPqRsTuVwXyZ';
 ]
 ```
 
-**重要な注意点:**
-- URL の最後に `/exec` が含まれていることを確認
-- Schema 内の `"paths"` は `"/"` のままにする（`"/exec"` にしない）
+**Important Notes:**
+- Confirm that the URL ends with `/exec`
+- Keep `"paths"` as `"/"` (do NOT change to `"/exec"`)
 
-**Authentication (認証):**
-- 「None」を選択（Google Apps Scriptは全員アクセス可能で設定済み）
+**Authentication:**
+- Select "None" (Google Apps Script is already set to accessible by anyone)
 
-**Privacy policy (プライバシーポリシー):**
-- 空欄でOK（個人利用の場合）
+**Privacy policy:**
+- Leave blank (OK for personal use)
 
-#### 3-4. GPTsを保存
-1. 右上の「Save」をクリック
-2. 公開設定を選択:
-   - **Only me**: 自分だけ使用（推奨）
-   - **Anyone with a link**: リンクを知っている人全員
-   - **Public**: 誰でも使用可能（GPT Storeに公開）
-3. 「Confirm」をクリック
-
----
-
-### Phase 4: 動作テスト
-
-#### 4-1. テスト画像を準備
-- 実際のレシート、またはサンプルレシート画像を用意
-
-#### 4-2. GPTsで画像をアップロード
-1. 作成した「レシートスキャナー」GPTsを開く
-2. 📎アイコンまたはドラッグ&ドロップでレシート画像をアップロード
-3. GPTsが画像を解析して内容を表示
-
-#### 4-3. データ確認と登録
-1. 抽出されたデータを確認
-2. 必要に応じて修正を指示
-3. 「登録してください」と入力
-4. GPTsがGoogle Spreadsheetに登録
-
-#### 4-4. Spreadsheetで確認
-1. Google Spreadsheetを開く
-2. 「レシート一覧」シートに新しい行が追加されていることを確認
+#### 3-4. Save GPTs
+1. Click "Save" in the upper right
+2. Select publishing settings:
+   - **Only me**: Use by yourself only (recommended)
+   - **Anyone with a link**: Anyone with the link
+   - **Public**: Anyone can use (publish to GPT Store)
+3. Click "Confirm"
 
 ---
 
-## トラブルシューティング
+### Phase 4: Test Operation
 
-### エラー: "Error talking to connector" または "Failed Outbound Call"
+#### 4-1. Prepare Test Image
+- Prepare an actual receipt or sample receipt image
 
-**これは GPTs Actions の接続エラーです。以下を順番に確認してください:**
+#### 4-2. Upload Image in GPTs
+1. Open the created "Receipt Scanner" GPTs
+2. Upload receipt image via 📎 icon or drag & drop
+3. GPTs analyzes the image and displays the content
 
-**最重要: GPTs 最適化版スクリプトを使用**
-- ✅ **`gas/receipt_processor_gpts.gs` を使用してください**
-- このバージョンは GPTs との互換性のためレスポンス形式を最適化しています
-- 理由: Google Apps Script のリダイレクト処理を GPTs が正しく処理できない場合があるため
+#### 4-3. Confirm and Register Data
+1. Review the extracted data
+2. Request corrections if needed
+3. Enter "Please register"
+4. GPTs registers to Google Spreadsheet
 
-**原因1: Apps Script のバージョン更新**
-最適化版スクリプトに変更した後、必ず新しいバージョンでデプロイ:
-1. Apps Script エディタでコードを `receipt_processor_gpts.gs` に置き換え
-2. 「デプロイ」→「デプロイを管理」
-3. 鉛筆アイコン → 「バージョン」→「新バージョン」
-4. 「デプロイ」をクリック
+#### 4-4. Check Spreadsheet
+1. Open Google Spreadsheet
+2. Confirm that a new row has been added to the "レシート一覧" (Receipt List) sheet
 
-**原因2: Actions Schema の問題**
-- `gpts/actions_schema_fixed.json` を使用しているか確認
-- Schema に `example` フィールドが残っていないか確認
-- `operationId` が `addReceipt` になっているか確認
+---
 
-**原因3: Server URL の設定ミス**
-- URL の最後に `/exec` が含まれているか確認
-  - ✅ 正: `https://script.google.com/macros/s/AKfycbx.../exec`
-  - ❌ 誤: `https://script.google.com/macros/s/AKfycbx...`
-- `"paths"` セクションが `"/"` になっているか確認（`"/exec"` ではない）
+## Troubleshooting
 
-**原因4: Authentication 設定**
-- Authentication が「None」になっているか確認
-- API Key などが設定されていないか確認
+### Error: "Error talking to connector" or "Failed Outbound Call"
 
-**原因5: Apps Script のアクセス権限**
-- Apps Script → 「デプロイ」→「デプロイを管理」
-- 「アクセスできるユーザー」が **「全員」** になっているか確認（これが最重要！）
+**This is a GPTs Actions connection error. Check the following in order:**
 
-**デバッグ方法:**
-1. ターミナルから直接テスト:
+**Cause 1: Apps Script Version Update**
+After updating the script, always deploy with a new version:
+1. "Deploy" → "Manage deployments"
+2. Pencil icon → "Version" → "New version"
+3. Click "Deploy"
+
+**Cause 2: Actions Schema Issue**
+- Confirm you're using `gpts/actions_schema.json`
+- Check that `operationId` is set to `addReceipt`
+
+**Cause 3: Server URL Setting Error**
+- Confirm the URL ends with `/exec`
+  - ✅ Correct: `https://script.google.com/macros/s/AKfycbx.../exec`
+  - ❌ Wrong: `https://script.google.com/macros/s/AKfycbx...`
+- Check that the `"paths"` section is `"/"` (not `"/exec"`)
+
+**Cause 4: Authentication Setting**
+- Confirm Authentication is set to "None"
+- Check that no API Key is set
+
+**Cause 5: Apps Script Access Permissions**
+- Apps Script → "Deploy" → "Manage deployments"
+- Confirm "Who has access" is set to **"Anyone"** (this is most important!)
+
+**Debug Method:**
+1. Test directly from terminal:
 ```bash
-curl -X POST "https://script.google.com/macros/s/【あなたのID】/exec" \
+curl -X POST "https://script.google.com/macros/s/【Your ID】/exec" \
   -H "Content-Type: application/json" \
-  -d '{"store":"テスト","total":1000}'
+  -d '{"store":"Test","total":1000}'
 ```
-2. エラーが出なければ GAS 側は正常 → GPTs の Actions 設定を見直す
-3. エラーが出る場合 → GAS のデプロイ設定を確認
+2. If no error → GAS side is normal → Review GPTs Actions settings
+3. If error occurs → Check GAS deployment settings
 
 ---
 
-### エラー: "API呼び出しに失敗しました"
+### Error: "API call failed"
 
-**原因1: デプロイURLが間違っている**
-- `gpts/actions_schema_fixed.json` の `servers.url` を確認
-- Apps Scriptの「デプロイを管理」から正しいURLを再確認
+**Cause 1: Deployment URL is wrong**
+- Check `servers.url` in `gpts/actions_schema.json`
+- Re-confirm the correct URL from "Manage deployments" in Apps Script
 
-**原因2: Apps Scriptの実行権限がない**
-- Apps Scriptエディタで `testAddReceipt` を実行して権限を再承認
+**Cause 2: No execution permission for Apps Script**
+- Run `testAddReceipt` in Apps Script editor to re-authorize
 
-**原因3: アクセス権限が「全員」になっていない**
-- Apps Script → 「デプロイ」→「デプロイを管理」
-- 鉛筆アイコンをクリック → 「アクセスできるユーザー」を「全員」に変更
+**Cause 3: Access permission is not "Anyone"**
+- Apps Script → "Deploy" → "Manage deployments"
+- Click pencil icon → Change "Who has access" to "Anyone"
 
-### エラー: "スプレッドシートが見つかりません"
+### Error: "Spreadsheet not found"
 
-**原因: SPREADSHEET_IDが間違っている**
-- `receipt_processor.gs` の `SPREADSHEET_ID` を確認
-- スプレッドシートのURLから正しいIDをコピー
+**Cause: SPREADSHEET_ID is wrong**
+- Check `SPREADSHEET_ID` in `receipt_processor.gs`
+- Copy correct ID from spreadsheet URL
 
-### レシート画像が正しく読み取れない
+### Receipt image is not read correctly
 
-**対処法:**
-- 画像を明るい場所で撮影
-- レシート全体がフレーム内に収まるように撮影
-- ピンボケしないよう注意
-- 影が入らないようにする
+**Solution:**
+- Take the photo in a bright location
+- Ensure entire receipt fits in frame
+- Avoid blurry photos
+- Avoid shadows
 
-### GPTsが「商品明細」を抽出してくれない
+### GPTs doesn't extract "item details"
 
-**対処法:**
-- 「商品の明細も抽出してください」と明示的に指示
-- レシート画像が鮮明か確認
-- 商品欄が見切れていないか確認
+**Solution:**
+- Explicitly instruct "Please also extract item details"
+- Confirm receipt image is clear
+- Check that item section is not cut off
 
 ---
 
-## カスタマイズ方法
+## Customization Methods
 
-### カテゴリを追加・変更する
+### Add or Change Categories
 
-**instructions.md を編集:**
+**Edit instructions.md:**
 ```markdown
-- カテゴリは店舗名や商品内容から推測する
-  - コンビニ、スーパー → 食費
-  - ドラッグストア → 日用品
-  - 交通系 → 交通費
-  - レジャー施設 → 娯楽
-  - 書店 → 書籍費        ← 追加
-  - 衣料品店 → 衣服費    ← 追加
+- Infer category from store name or item content
+  - Convenience stores, supermarkets → Food
+  - Drugstores → Daily Goods
+  - Transportation-related → Transportation
+  - Leisure facilities → Entertainment
+  - Bookstores → Books        ← Added
+  - Clothing stores → Clothing    ← Added
 ```
 
-GPTsの「Configure」→「Instructions」を更新
+Update GPTs "Configure" → "Instructions"
 
-### スプレッドシートの列を追加する
+### Add Columns to Spreadsheet
 
-**receipt_processor.gs を編集:**
+**Edit receipt_processor.gs:**
 
-1. `addReceiptToSheet` 関数の `row` 配列に項目を追加:
+1. Add items to the `row` array in `addReceiptToSheet` function:
 ```javascript
 const row = [
   timestamp,
@@ -296,13 +285,13 @@ const row = [
   data.total || 0,
   data.tax || 0,
   data.paymentMethod || '',
-  data.location || '',              // ← 新規追加: 店舗所在地
+  data.location || '',              // ← New: Store location
   JSON.stringify(data.items || []),
   data.notes || ''
 ];
 ```
 
-2. `createReceiptSheet` 関数のヘッダーを更新:
+2. Update headers in `createReceiptSheet` function:
 ```javascript
 const headers = [
   '登録日時',
@@ -312,112 +301,104 @@ const headers = [
   '合計金額',
   '消費税',
   '支払方法',
-  '店舗所在地',    // ← 追加
+  '店舗所在地',    // ← Added
   '商品明細',
   'メモ'
 ];
 ```
 
-3. Apps Scriptで「デプロイ」→「新しいデプロイ」でバージョンアップ
+3. In Apps Script, "Deploy" → "New deployment" to upgrade version
 
-4. instructions.md と actions_schema.json にも項目を追加
-
----
-
-## セキュリティに関する注意事項
-
-### 重要な考慮事項
-1. **個人情報**: レシートには個人情報が含まれる可能性があります
-2. **アクセス制御**: スプレッドシートの共有設定を適切に管理してください
-3. **GPTs公開範囲**: 「Only me」推奨（家族との共有なら「Anyone with a link」）
-
-### 推奨設定
-- スプレッドシート: 自分のみアクセス可能
-- GPTs: Only me（自分のみ）
-- Apps Script: アクセス権限は「全員」必須（APIとして機能させるため）
+4. Also add the field to instructions.md and actions_schema.json
 
 ---
 
-## 運用のコツ
+## Security Considerations
 
-### 定期的なメンテナンス
-- 月に1回程度、スプレッドシートのデータをバックアップ
-- 不要なレシートデータは定期的にアーカイブシートに移動
+### Important Points
+1. **Personal Information**: Receipts may contain personal information
+2. **Access Control**: Properly manage spreadsheet sharing settings
+3. **GPTs Publishing Scope**: "Only me" recommended (or "Anyone with a link" for family sharing)
 
-### 効率的な利用方法
-1. **連続撮影**: 複数のレシートをまとめて撮影してから一気に処理
-2. **カテゴリ修正**: 最初に登録後、まとめてカテゴリを修正
-3. **月次集計**: スプレッドシートのピボットテーブル機能で月次分析
-
-### データ分析の活用
-スプレッドシートで以下の分析が可能:
-- カテゴリ別支出グラフ
-- 店舗別利用頻度
-- 月別支出推移
-- 消費税合計
-
-**例: ピボットテーブルの作成**
-1. データ範囲を選択
-2. 「挿入」→「ピボットテーブル」
-3. 行: カテゴリ、値: 合計金額の合計
+### Recommended Settings
+- Spreadsheet: Accessible only by yourself
+- GPTs: Only me (yourself only)
+- Apps Script: Access permission must be "Anyone" (required to function as API)
 
 ---
 
-## ファイル構成
+## Operational Tips
+
+### Regular Maintenance
+- Back up spreadsheet data about once a month
+- Periodically move unnecessary receipt data to archive sheet
+
+### Efficient Usage
+1. **Continuous Shooting**: Take multiple receipts at once then process in batch
+2. **Category Correction**: Register first, then correct categories in batch
+3. **Monthly Summary**: Monthly analysis with spreadsheet pivot table feature
+
+### Data Analysis Utilization
+The following analyses are possible in spreadsheet:
+- Category-based spending graph
+- Store usage frequency
+- Monthly spending trend
+- Total consumption tax
+
+**Example: Creating a Pivot Table**
+1. Select data range
+2. "Insert" → "Pivot table"
+3. Row: Category, Value: Sum of total amount
+
+---
+
+## File Structure
 
 ```
 receipt_scan_gpts/
 ├── gas/
-│   ├── receipt_processor.gs           # Google Apps Scriptコード（基本版）
-│   ├── receipt_processor_gpts.gs      # 推奨：GPTs最適化版 ★★
-│   ├── receipt_processor_debug.gs     # デバッグログ付きバージョン
-│   └── receipt_processor_cors.gs      # CORS対応版
+│   └── receipt_processor.gs           # Google Apps Script code
 ├── gpts/
-│   ├── instructions.md                 # GPTsカスタム指示文
-│   ├── actions_schema.json             # GPTs Actionsスキーマ（元版）
-│   ├── actions_schema_fixed.json       # 推奨：互換性改善版 ★
-│   └── actions_schema_simple.json      # 最小構成テスト版
+│   ├── instructions.md                 # GPTs custom instructions
+│   └── actions_schema.json             # GPTs Actions schema
 ├── docs/
-│   └── sample_data.json                # サンプルデータ集
-├── test_webhook.sh                     # Webhook接続テストスクリプト
-├── send_receipt.sh                     # サンプルデータ送信スクリプト
-├── SETUP_GUIDE.md                      # このファイル
-└── README.md                           # プロジェクト概要
+│   ├── sample_data.json                # Sample data collection
+│   └── TESTING_GUIDE.md                # Testing guide
+├── test_webhook.sh                     # Webhook connection test script
+├── send_receipt.sh                     # Sample data sending script
+├── SETUP_GUIDE.md                      # This file
+└── README.md                           # Project overview
 ```
 
-**推奨ファイル:**
-- GAS: `receipt_processor_gpts.gs` ★★（GPTs との接続問題を解決）
-- Schema: `actions_schema_fixed.json` ★
+---
+
+## Support
+
+If the problem is not resolved, check the following:
+1. Apps Script execution log ("View" → "Logs")
+2. Spreadsheet ID and deployment URL are correct
+3. GPTs Actions settings are imported correctly
 
 ---
 
-## サポート
+## Update History
 
-問題が解決しない場合は、以下を確認:
-1. Apps Scriptの実行ログ（「表示」→「ログ」）
-2. スプレッドシートのID、デプロイURLが正しいか
-3. GPTs Actionsの設定が正しくインポートされているか
+- **v1.2.0** (2025-10-22): Complete resolution of GPTs connection errors
+  - Added `receipt_processor_gpts.gs` (response format optimized for GPTs)
+  - Resolved redirect processing issues
+  - Adopted simple success/error response format
 
----
+- **v1.1.0** (2025-10-22): GPTs Actions compatibility improvement
+  - Added `actions_schema_fixed.json` (resolved connection issues with GPTs)
+  - Enhanced troubleshooting section
+  - Added debug scripts (`test_webhook.sh`, `send_receipt.sh`)
+  - Added CORS-compatible GAS script
 
-## 更新履歴
-
-- **v1.2.0** (2025-10-22): GPTs 接続エラー完全解決
-  - `receipt_processor_gpts.gs` 追加（レスポンス形式を GPTs 用に最適化）
-  - リダイレクト処理の問題を解決
-  - シンプルな success/error レスポンス形式を採用
-
-- **v1.1.0** (2025-10-22): GPTs Actions 互換性改善
-  - `actions_schema_fixed.json` 追加（GPTs との接続問題を解決）
-  - トラブルシューティングセクション拡充
-  - デバッグ用スクリプト追加（`test_webhook.sh`, `send_receipt.sh`）
-  - CORS 対応版 GAS スクリプト追加
-
-- **v1.0.0** (2025-10-22): 初版リリース
-  - レシート画像解析機能
-  - Google Spreadsheet自動記録
-  - 基本的なカテゴリ分類
+- **v1.0.0** (2025-10-22): Initial release
+  - Receipt image analysis function
+  - Google Spreadsheet automatic recording
+  - Basic category classification
 
 ---
 
-以上でセットアップ完了です！快適なレシート管理をお楽しみください 📊
+Setup complete! Enjoy convenient receipt management 📊

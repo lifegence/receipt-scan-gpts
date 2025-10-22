@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Google Apps Script Webhook URL
-WEBHOOK_URL="https://script.google.com/macros/s/AKfycbwCJMWjm3uhxSkAphvWPxNVdVj6RjnIjgufEjEeZ_7A8ZqwGGq1PYNWCJcrokHHJW08/exec"
+WEBHOOK_URL="https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID_HERE/exec"
 
-# テストデータ（コンビニレシート）
+# Test data (convenience store receipt)
 TEST_DATA='{
   "date": "2025-10-22",
   "store": "セブンイレブン 東京駅前店",
@@ -37,41 +37,41 @@ TEST_DATA='{
 }'
 
 echo "================================================"
-echo "Google Apps Script Webhook テスト"
+echo "Google Apps Script Webhook Test"
 echo "================================================"
 echo ""
-echo "送信先: $WEBHOOK_URL"
+echo "Sending to: $WEBHOOK_URL"
 echo ""
-echo "送信データ:"
+echo "Sending data:"
 echo "$TEST_DATA" | jq '.'
 echo ""
-echo "送信中..."
+echo "Sending..."
 echo ""
 
-# POSTリクエストを送信
+# Send POST request
 RESPONSE=$(curl -s -L -X POST "$WEBHOOK_URL" \
   -H "Content-Type: application/json" \
   -d "$TEST_DATA")
 
 echo "================================================"
-echo "レスポンス:"
+echo "Response:"
 echo "================================================"
 echo "$RESPONSE" | jq '.'
 echo ""
 
-# 結果の確認
+# Check result
 if echo "$RESPONSE" | jq -e '.statusCode == 200' > /dev/null 2>&1; then
-  echo "✅ 成功: データがスプレッドシートに登録されました"
+  echo "✅ Success: Data has been registered to the spreadsheet"
   echo ""
-  echo "スプレッドシートを確認してください:"
-  echo "https://docs.google.com/spreadsheets/d/14nYsYSAcjsJQG3gSAMq3CwTs8TKYSckysDKzhUrd8v0/edit?gid=0#gid=0"
+  echo "Please check your spreadsheet:"
+  echo "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID_HERE/edit"
 else
-  echo "❌ エラー: データの登録に失敗しました"
+  echo "❌ Error: Failed to register data"
   echo ""
-  echo "トラブルシューティング:"
-  echo "1. Webhook URL が正しいか確認"
-  echo "2. Google Apps Script が正しくデプロイされているか確認"
-  echo "3. SPREADSHEET_ID が正しく設定されているか確認"
+  echo "Troubleshooting:"
+  echo "1. Check if the Webhook URL is correct"
+  echo "2. Check if Google Apps Script is properly deployed"
+  echo "3. Check if SPREADSHEET_ID is correctly set"
 fi
 
 echo ""

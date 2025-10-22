@@ -1,9 +1,9 @@
 /**
- * レシートデータをGoogle Spreadsheetに追記するAPI（名刺GPTsパターン）
+ * Receipt Scanner API - Add receipt data to Google Spreadsheet (Business Card GPTs Pattern)
  */
 
-const SPREADSHEET_ID = '14nYsYSAcjsJQG3gSAMq3CwTs8TKYSckysDKzhUrd8v0';
-const SHEET_NAME = 'レシート一覧';
+const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
+const SHEET_NAME = 'レシート一覧';  // Sheet name (keep Japanese for compatibility)
 
 function doPost(e) {
   try {
@@ -54,7 +54,7 @@ function addReceiptToSheet(data) {
   return {
     rowNumber: lastRow,
     timestamp: timestamp.toISOString(),
-    message: 'レシートデータを登録しました'
+    message: 'Receipt data has been registered'
   };
 }
 
@@ -94,15 +94,15 @@ function createTextResponse(message) {
 function testAddReceipt() {
   const testData = {
     date: '2025-10-22',
-    store: 'テスト店舗（名刺パターン）',
-    category: '食費',
+    store: 'Test Store (Business Card Pattern)',
+    category: '食費',  // Category (keep Japanese for compatibility)
     total: 7777,
     tax: 574,
-    paymentMethod: 'クレジットカード',
+    paymentMethod: 'クレジットカード',  // Payment method (keep Japanese for compatibility)
     items: [
-      { name: 'テスト商品', price: 7777, quantity: 1 }
+      { name: 'Test Item', price: 7777, quantity: 1 }
     ],
-    notes: '名刺GPTsパターンで実装'
+    notes: 'Implemented with Business Card GPTs pattern'
   };
 
   const result = addReceiptToSheet(testData);

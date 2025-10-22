@@ -1,56 +1,56 @@
-# テストガイド
+# Testing Guide
 
-レシートスキャナーGPTsの動作確認手順
+Receipt Scanner GPTs Operation Verification Procedures
 
-## テスト環境の確認
+## Test Environment Verification
 
-### 前提条件
-- [ ] Google Spreadsheetが作成されている
-- [ ] Apps Scriptがデプロイされている
-- [ ] GPTsが作成されている
-- [ ] GPTs ActionsのURLが正しく設定されている
+### Prerequisites
+- [ ] Google Spreadsheet is created
+- [ ] Apps Script is deployed
+- [ ] GPTs is created
+- [ ] GPTs Actions URL is correctly set
 
 ---
 
-## Phase 1: Apps Script 単体テスト
+## Phase 1: Apps Script Unit Test
 
-### 1-1. テスト関数の実行
+### 1-1. Execute Test Function
 
-1. Apps Scriptエディタを開く
-2. 関数選択で `testAddReceipt` を選択
-3. 「実行」ボタンをクリック
-4. 実行ログを確認:
+1. Open Apps Script editor
+2. Select `testAddReceipt` from function dropdown
+3. Click "Run" button
+4. Check execution log:
 ```
 {
   rowNumber: 2,
   timestamp: "2025-10-22T12:34:56.789Z",
-  message: "レシートデータを追加しました"
+  message: "Receipt data has been registered"
 }
 ```
 
-### 1-2. スプレッドシート確認
+### 1-2. Verify Spreadsheet
 
-1. Google Spreadsheetを開く
-2. 「レシート一覧」シートが自動作成されている
-3. ヘッダー行 + テストデータ行が存在
+1. Open Google Spreadsheet
+2. "レシート一覧" (Receipt List) sheet is automatically created
+3. Header row + test data row exist
 
-**期待される結果:**
+**Expected Result:**
 | 登録日時 | 購入日 | 店舗名 | カテゴリ | 合計金額 | 消費税 | 支払方法 | 商品明細 | メモ |
 |---------|--------|--------|---------|---------|--------|---------|---------|------|
-| 2025-10-22 XX:XX | 2025-10-22 | セブンイレブン | 食費 | ¥1,234 | ¥91 | 現金 | [{"name":"おにぎり"...}] | テストデータ |
+| 2025-10-22 XX:XX | 2025-10-22 | Seven-Eleven | 食費 | ¥1,234 | ¥91 | 現金 | [{"name":"Rice Ball"...}] | Test data |
 
 ---
 
-## Phase 2: API エンドポイントテスト
+## Phase 2: API Endpoint Test
 
-### 2-1. curlでのテスト（任意）
+### 2-1. Test with curl (Optional)
 
-**GETリクエスト（ヘルスチェック）:**
+**GET Request (Health Check):**
 ```bash
 curl "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
 ```
 
-**期待される応答:**
+**Expected Response:**
 ```json
 {
   "statusCode": 200,
@@ -58,13 +58,13 @@ curl "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
 }
 ```
 
-**POSTリクエスト（データ登録）:**
+**POST Request (Data Registration):**
 ```bash
 curl -X POST \
   -H "Content-Type: application/json" \
   -d '{
     "date": "2025-10-22",
-    "store": "ローソン",
+    "store": "Lawson",
     "category": "食費",
     "total": 500,
     "tax": 37,
@@ -73,7 +73,7 @@ curl -X POST \
   "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
 ```
 
-**期待される応答:**
+**Expected Response:**
 ```json
 {
   "statusCode": 200,
@@ -81,104 +81,104 @@ curl -X POST \
   "data": {
     "rowNumber": 3,
     "timestamp": "2025-10-22T12:34:56.789Z",
-    "message": "レシートデータを追加しました"
+    "message": "Receipt data has been registered"
   }
 }
 ```
 
-### 2-2. Apps Scriptログの確認
+### 2-2. Check Apps Script Logs
 
-エラーが発生した場合:
-1. Apps Scriptエディタ → 「表示」→「ログ」
-2. エラーメッセージを確認
-3. 必要に応じてデバッグ
-
----
-
-## Phase 3: GPTs統合テスト
-
-### 3-1. テストシナリオ1: 基本的な画像アップロード
-
-**手順:**
-1. GPTsを開く
-2. 簡単なテキストレシート画像をアップロード（手書きメモでもOK）
-3. GPTsが内容を読み取る
-4. 「登録してください」と入力
-
-**期待される動作:**
-- GPTsがレシート内容を抽出して表示
-- ユーザー確認後、API呼び出し
-- 「✅ スプレッドシートに登録完了しました！」メッセージ
-- 行番号が表示される
-
-**確認項目:**
-- [ ] 画像がアップロードできる
-- [ ] 店舗名が正しく抽出される
-- [ ] 金額が正しく抽出される
-- [ ] 日付が正しく抽出される
-- [ ] APIが正常に呼び出される
-- [ ] スプレッドシートに記録される
-
-### 3-2. テストシナリオ2: 商品明細の抽出
-
-**手順:**
-1. 商品明細が明確なレシート画像をアップロード
-2. 「商品の明細も詳しく抽出してください」と指示
-3. 内容を確認して登録
-
-**期待される動作:**
-- items配列に複数の商品が含まれる
-- 商品名、価格、数量が正しい
-- スプレッドシートのH列にJSON形式で記録
-
-**確認項目:**
-- [ ] 複数商品が抽出される
-- [ ] 商品名が正確
-- [ ] 価格と数量が一致
-- [ ] JSON形式で記録される
-
-### 3-3. テストシナリオ3: データ修正
-
-**手順:**
-1. レシート画像をアップロード
-2. GPTsが抽出したデータを確認
-3. 「カテゴリを日用品に変更してください」と指示
-4. 修正後のデータで登録
-
-**期待される動作:**
-- GPTsがデータを修正
-- 修正後の内容を再表示
-- 正しいデータで登録
-
-**確認項目:**
-- [ ] ユーザーの修正指示を理解
-- [ ] データが正しく更新される
-- [ ] 修正後のデータで登録される
-
-### 3-4. テストシナリオ4: 不鮮明な画像
-
-**手順:**
-1. ぼやけた、または暗いレシート画像をアップロード
-2. GPTsの応答を確認
-
-**期待される動作:**
-- 読み取れない項目について言及
-- 手動入力を促す
-- 部分的なデータでも登録可能
-
-**確認項目:**
-- [ ] 不明な項目を明示
-- [ ] 手動入力を促す
-- [ ] エラーで止まらない
+If errors occur:
+1. Apps Script editor → "View" → "Logs"
+2. Check error messages
+3. Debug as needed
 
 ---
 
-## Phase 4: エラーハンドリングテスト
+## Phase 3: GPTs Integration Test
 
-### 4-1. 不正なデータ送信
+### 3-1. Test Scenario 1: Basic Image Upload
 
-**テスト内容:**
-Apps ScriptのdoPost関数に不正なJSONを送信
+**Steps:**
+1. Open GPTs
+2. Upload simple text receipt image (handwritten note is OK)
+3. GPTs reads the content
+4. Enter "Please register"
+
+**Expected Behavior:**
+- GPTs extracts and displays receipt content
+- After user confirmation, API is called
+- "✅ Registration to spreadsheet completed!" message appears
+- Row number is displayed
+
+**Checklist:**
+- [ ] Image can be uploaded
+- [ ] Store name is correctly extracted
+- [ ] Amount is correctly extracted
+- [ ] Date is correctly extracted
+- [ ] API is called successfully
+- [ ] Data is recorded to spreadsheet
+
+### 3-2. Test Scenario 2: Item Details Extraction
+
+**Steps:**
+1. Upload receipt image with clear item details
+2. Instruct "Please also extract item details in detail"
+3. Review content and register
+
+**Expected Behavior:**
+- items array contains multiple products
+- Product name, price, and quantity are correct
+- Recorded in JSON format in column H of spreadsheet
+
+**Checklist:**
+- [ ] Multiple items are extracted
+- [ ] Product names are accurate
+- [ ] Price and quantity match
+- [ ] Recorded in JSON format
+
+### 3-3. Test Scenario 3: Data Correction
+
+**Steps:**
+1. Upload receipt image
+2. Review data extracted by GPTs
+3. Instruct "Please change category to daily goods"
+4. Register with corrected data
+
+**Expected Behavior:**
+- GPTs corrects the data
+- Displays corrected content again
+- Registers with correct data
+
+**Checklist:**
+- [ ] Understands user's correction instructions
+- [ ] Data is correctly updated
+- [ ] Registers with corrected data
+
+### 3-4. Test Scenario 4: Unclear Image
+
+**Steps:**
+1. Upload blurry or dark receipt image
+2. Check GPTs response
+
+**Expected Behavior:**
+- Mentions unreadable items
+- Prompts for manual input
+- Can register even with partial data
+
+**Checklist:**
+- [ ] Indicates unknown items
+- [ ] Prompts for manual input
+- [ ] Does not stop with error
+
+---
+
+## Phase 4: Error Handling Test
+
+### 4-1. Invalid Data Transmission
+
+**Test Content:**
+Send invalid JSON to Apps Script doPost function
 
 ```bash
 curl -X POST \
@@ -187,7 +187,7 @@ curl -X POST \
   "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
 ```
 
-**期待される応答:**
+**Expected Response:**
 ```json
 {
   "statusCode": 500,
@@ -195,19 +195,19 @@ curl -X POST \
 }
 ```
 
-### 4-2. 必須項目なしのデータ
+### 4-2. Data Without Required Fields
 
-**テスト内容:**
-店舗名も金額もないデータを送信
+**Test Content:**
+Send data without store name or amount
 
 ```bash
 curl -X POST \
   -H "Content-Type: application/json" \
-  -d '{"notes": "テスト"}' \
+  -d '{"notes": "Test"}' \
   "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
 ```
 
-**期待される応答:**
+**Expected Response:**
 ```json
 {
   "statusCode": 400,
@@ -215,58 +215,58 @@ curl -X POST \
 }
 ```
 
-### 4-3. スプレッドシートIDが間違っている場合
+### 4-3. Incorrect Spreadsheet ID
 
-**テスト内容:**
-Apps Scriptの`SPREADSHEET_ID`を無効なIDに変更して実行
+**Test Content:**
+Change `SPREADSHEET_ID` in Apps Script to invalid ID and execute
 
-**期待される動作:**
-- エラーログに「Exception: Spreadsheet not found」などが記録される
-- statusCode 500のエラーレスポンス
-
----
-
-## Phase 5: パフォーマンステスト
-
-### 5-1. 連続登録テスト
-
-**手順:**
-1. GPTsで5枚のレシート画像を連続アップロード
-2. それぞれ登録
-
-**確認項目:**
-- [ ] すべて正常に登録される
-- [ ] スプレッドシートの行番号が連続
-- [ ] レスポンスタイムが極端に遅くならない
-
-### 5-2. 大量商品明細テスト
-
-**手順:**
-1. 商品が20個以上あるレシート画像をアップロード
-2. 全商品を抽出するよう指示
-
-**確認項目:**
-- [ ] すべての商品が抽出される
-- [ ] JSON文字列長制限に引っかからない
-- [ ] スプレッドシートに正常記録
+**Expected Behavior:**
+- Error log records "Exception: Spreadsheet not found" etc.
+- statusCode 500 error response
 
 ---
 
-## Phase 6: セキュリティテスト
+## Phase 5: Performance Test
 
-### 6-1. アクセス権限の確認
+### 5-1. Continuous Registration Test
 
-**テスト内容:**
-別のGoogleアカウントでAPIエンドポイントにアクセス
+**Steps:**
+1. Upload 5 receipt images continuously in GPTs
+2. Register each one
 
-**期待される動作:**
-- 「アクセスできるユーザー: 全員」設定なら成功
-- スプレッドシート自体は元のアカウントでのみ閲覧可能
+**Checklist:**
+- [ ] All are registered successfully
+- [ ] Spreadsheet row numbers are consecutive
+- [ ] Response time does not become extremely slow
 
-### 6-2. SQLインジェクション的な入力
+### 5-2. Large Item Details Test
 
-**テスト内容:**
-店舗名に特殊文字を含むデータを送信
+**Steps:**
+1. Upload receipt image with 20+ items
+2. Instruct to extract all items
+
+**Checklist:**
+- [ ] All items are extracted
+- [ ] Not blocked by JSON string length limit
+- [ ] Successfully recorded to spreadsheet
+
+---
+
+## Phase 6: Security Test
+
+### 6-1. Access Permission Verification
+
+**Test Content:**
+Access API endpoint with a different Google account
+
+**Expected Behavior:**
+- Succeeds if "Who has access: Anyone" is set
+- Spreadsheet itself is viewable only by original account
+
+### 6-2. SQL Injection-like Input
+
+**Test Content:**
+Send data with special characters in store name
 
 ```json
 {
@@ -275,90 +275,90 @@ Apps Scriptの`SPREADSHEET_ID`を無効なIDに変更して実行
 }
 ```
 
-**期待される動作:**
-- 通常の文字列として処理される
-- エラーなく登録される（Apps ScriptはSQLを使用しないため安全）
+**Expected Behavior:**
+- Processed as normal string
+- Registered without error (safe because Apps Script doesn't use SQL)
 
 ---
 
-## テストチェックリスト
+## Test Checklist
 
-### 基本機能
-- [ ] Apps Script単体で動作する
-- [ ] APIエンドポイントが応答する
-- [ ] GPTsから画像をアップロードできる
-- [ ] データが正しく抽出される
-- [ ] スプレッドシートに記録される
+### Basic Functions
+- [ ] Apps Script works standalone
+- [ ] API endpoint responds
+- [ ] Can upload images from GPTs
+- [ ] Data is extracted correctly
+- [ ] Recorded to spreadsheet
 
-### データ品質
-- [ ] 店舗名が正確
-- [ ] 金額が正確
-- [ ] 日付が正しい形式
-- [ ] カテゴリ分類が適切
-- [ ] 商品明細が詳細
+### Data Quality
+- [ ] Store name is accurate
+- [ ] Amount is accurate
+- [ ] Date is in correct format
+- [ ] Category classification is appropriate
+- [ ] Item details are detailed
 
-### エラーハンドリング
-- [ ] 不正なデータでエラーを返す
-- [ ] 不鮮明な画像に対応
-- [ ] APIエラー時に適切なメッセージ
+### Error Handling
+- [ ] Returns error for invalid data
+- [ ] Handles unclear images
+- [ ] Appropriate message on API error
 
-### ユーザビリティ
-- [ ] 確認プロセスが分かりやすい
-- [ ] 修正指示が理解される
-- [ ] 登録完了が明確に通知される
+### Usability
+- [ ] Confirmation process is clear
+- [ ] Correction instructions are understood
+- [ ] Registration completion is clearly notified
 
-### セキュリティ
-- [ ] スプレッドシートアクセス権限が適切
-- [ ] 個人情報が保護されている
-- [ ] 不正な入力で問題が起きない
-
----
-
-## トラブル時の対処
-
-### GPTsがAPIを呼び出さない
-
-**原因候補:**
-1. Actions設定が間違っている
-2. デプロイURLが間違っている
-3. Actionsが保存されていない
-
-**対処:**
-1. GPTsの「Configure」→「Actions」を確認
-2. Schema内のURLが正しいか確認
-3. 「Save」をクリックして再保存
-
-### スプレッドシートに記録されない
-
-**原因候補:**
-1. SPREADSHEET_IDが間違っている
-2. シート作成権限がない
-3. API呼び出しは成功しているがデータが見えない
-
-**対処:**
-1. Apps ScriptのログでSPREADSHEET_IDを確認
-2. testAddReceipt関数を実行して権限確認
-3. スプレッドシートをリロード
-
-### GPTsが画像を読み取れない
-
-**原因候補:**
-1. 画像が不鮮明
-2. Vision APIの制限
-3. 日本語レシートの認識精度
-
-**対処:**
-1. 明るい場所で再撮影
-2. レシート全体がフレームに収まるようにする
-3. 手動でデータ入力を促す
+### Security
+- [ ] Spreadsheet access permissions are appropriate
+- [ ] Personal information is protected
+- [ ] No issues with invalid input
 
 ---
 
-## サンプルデータを使ったテスト
+## Troubleshooting
 
-`docs/sample_data.json`にテスト用のサンプルデータがあります。
+### GPTs Doesn't Call API
 
-**curlでのテスト例:**
+**Possible Causes:**
+1. Actions settings are wrong
+2. Deployment URL is wrong
+3. Actions not saved
+
+**Solution:**
+1. Check GPTs "Configure" → "Actions"
+2. Verify URL in Schema is correct
+3. Click "Save" to re-save
+
+### Not Recorded to Spreadsheet
+
+**Possible Causes:**
+1. SPREADSHEET_ID is wrong
+2. No sheet creation permission
+3. API call succeeded but data not visible
+
+**Solution:**
+1. Check SPREADSHEET_ID in Apps Script logs
+2. Run testAddReceipt function to verify permissions
+3. Reload spreadsheet
+
+### GPTs Cannot Read Image
+
+**Possible Causes:**
+1. Image is unclear
+2. Vision API limitations
+3. Japanese receipt recognition accuracy
+
+**Solution:**
+1. Retake photo in bright location
+2. Ensure entire receipt fits in frame
+3. Prompt for manual data entry
+
+---
+
+## Testing with Sample Data
+
+Sample data for testing is available in `docs/sample_data.json`.
+
+**Test Example with curl:**
 ```bash
 curl -X POST \
   -H "Content-Type: application/json" \
@@ -366,21 +366,21 @@ curl -X POST \
   "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
 ```
 
-または、Apps Scriptで:
+Or in Apps Script:
 ```javascript
 function testWithSampleData() {
   const sampleData = {
     "date": "2025-10-22",
-    "store": "セブンイレブン 東京駅前店",
+    "store": "Seven-Eleven Tokyo Station",
     "category": "食費",
     "total": 1234,
     "tax": 91,
     "paymentMethod": "電子マネー",
     "items": [
-      {"name": "おにぎり 梅", "price": 120, "quantity": 2},
-      {"name": "サラダチキン", "price": 298, "quantity": 1}
+      {"name": "Rice Ball (Plum)", "price": 120, "quantity": 2},
+      {"name": "Salad Chicken", "price": 298, "quantity": 1}
     ],
-    "notes": "朝食と昼食分"
+    "notes": "Breakfast and lunch"
   };
 
   const result = addReceiptToSheet(sampleData);
@@ -390,4 +390,4 @@ function testWithSampleData() {
 
 ---
 
-以上でテストが完了です。すべてのチェック項目をクリアしたら本番運用を開始できます！
+Testing complete! Once all checklist items are cleared, you can start production operation!

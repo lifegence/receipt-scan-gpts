@@ -1,0 +1,30 @@
+# Sensitive configuration
+.env
+*.env
+config.json
+credentials.json
+
+# Local development
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node modules (if using)
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Personal test data
+personal_receipts/
+my_spreadsheet_id.txt
