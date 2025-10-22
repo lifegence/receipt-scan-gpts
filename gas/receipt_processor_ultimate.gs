@@ -1,68 +1,31 @@
 /**
- * レシートデータをGoogle Spreadsheetに追記するAPI（GPTs完全対応版）
- * 302リダイレクト問題を完全解決
+ * レシートデータをGoogle Spreadsheetに追記するAPI（名刺GPTsパターン）
  */
 
-// スプレッドシートIDを設定
 const SPREADSHEET_ID = '14nYsYSAcjsJQG3gSAMq3CwTs8TKYSckysDKzhUrd8v0';
 const SHEET_NAME = 'レシート一覧';
 
-/**
- * POST リクエストを処理
- */
 function doPost(e) {
-  // CORS ヘッダー付きでレスポンスを返す
   try {
     const data = JSON.parse(e.postData.contents);
 
     if (!validateReceiptData(data)) {
-      return createResponse({
-        success: false,
-        error: "Invalid data: store or total is required"
-      });
+      return createTextResponse("Invalid data: store or total is required");
     }
 
     const result = addReceiptToSheet(data);
-
-    return createResponse({
-      success: true,
-      rowNumber: result.rowNumber,
-      timestamp: result.timestamp,
-      message: result.message
-    });
+    return createTextResponse(result.message);
 
   } catch (error) {
     Logger.log('Error: ' + error.message);
-    return createResponse({
-      success: false,
-      error: error.message
-    });
+    return createTextResponse("Error: " + error.message);
   }
 }
 
-/**
- * GET リクエストを処理
- */
 function doGet(e) {
-  return createResponse({
-    success: true,
-    message: "Receipt Scanner API is running",
-    version: "2.0.0-ultimate"
-  });
+  return createTextResponse("Receipt Scanner API is running - v2.0.0-ultimate");
 }
 
-/**
- * レスポンスを作成（CORS対応、リダイレクト回避）
- */
-function createResponse(data) {
-  const output = ContentService.createTextOutput(JSON.stringify(data));
-  output.setMimeType(ContentService.MimeType.JSON);
-  return output;
-}
-
-/**
- * レシートデータをシートに追加
- */
 function addReceiptToSheet(data) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   let sheet = ss.getSheetByName(SHEET_NAME);
@@ -95,9 +58,6 @@ function addReceiptToSheet(data) {
   };
 }
 
-/**
- * レシート用のシートを新規作成
- */
 function createReceiptSheet(spreadsheet) {
   const sheet = spreadsheet.insertSheet(SHEET_NAME);
 
@@ -113,34 +73,36 @@ function createReceiptSheet(spreadsheet) {
   headerRange.setBackground('#4285f4');
   headerRange.setFontColor('#ffffff');
 
-  sheet.setColumnWidths(1, 9, [150, 100, 150, 100, 100, 80, 100, 300, 200]);
+  [150, 100, 150, 100, 100, 80, 100, 300, 200].forEach((width, i) => {
+    sheet.setColumnWidth(i + 1, width);
+  });
+
   sheet.setFrozenRows(1);
 
   return sheet;
 }
 
-/**
- * データ検証
- */
 function validateReceiptData(data) {
   return data && typeof data === 'object' && (data.store || data.total);
 }
 
-/**
- * テスト用関数
- */
+function createTextResponse(message) {
+  return ContentService.createTextOutput(JSON.stringify({ message: message }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
 function testAddReceipt() {
   const testData = {
     date: '2025-10-22',
-    store: 'テスト店舗（Ultimate版）',
+    store: 'テスト店舗（名刺パターン）',
     category: '食費',
-    total: 8888,
-    tax: 657,
+    total: 7777,
+    tax: 574,
     paymentMethod: 'クレジットカード',
     items: [
-      { name: 'Ultimate商品', price: 8888, quantity: 1 }
+      { name: 'テスト商品', price: 7777, quantity: 1 }
     ],
-    notes: 'GPTs完全対応版テスト'
+    notes: '名刺GPTsパターンで実装'
   };
 
   const result = addReceiptToSheet(testData);

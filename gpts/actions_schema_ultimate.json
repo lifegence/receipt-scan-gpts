@@ -7,7 +7,8 @@
   },
   "servers": [
     {
-      "url": "https://script.google.com/macros/s/AKfycbz0jm4j35inhtNs-BD0HpVx9yYef7smxZrX6TeuwZJZDICm5xVJr0eQEDv0d5lpyMnH"
+      "url": "https://script.google.com/macros/s/AKfycbz0jm4j35inhtNs-BD0HpVx9yYef7smxZrX6TeuwZJZDICm5xVJr0eQEDv0d5lpyMnH/exec",
+      "description": "URL of the Google Apps Script Web App"
     }
   ],
   "paths": {
@@ -69,16 +70,16 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully added receipt",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": {"type": "boolean"},
-                    "rowNumber": {"type": "number"},
-                    "timestamp": {"type": "string"},
-                    "message": {"type": "string"}
+                    "message": {
+                      "type": "string",
+                      "example": "レシートデータを登録しました"
+                    }
                   }
                 }
               }
